@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_workorder_list_view_inherit_extension" model="ir.ui.view">
+        <field name="name">mrp.workorder.list.view.inherit.extension</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[14]" position="after">
+                <field name="source_production" readonly="1" attrs="{'column_invisible': [('parent.show_source_mo', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_components_details_ids_tree" model="ir.ui.view">
+        <field name="name">components.details.ids.tree</field>
+        <field name="model">components.details</field>
+        <field name="arch" type="xml">
+            <tree string="Components BOM Structure" create="false">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="product_qty"/>
+                <field name="product_uom"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_form_view_inherit_extension" model="ir.ui.view">
+        <field name="name">mrp.production.form.view.inherit.extension</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(mrp.action_report_mrp_bom)d" type="action"
+                    class="oe_stat_button" icon="fa-bars" string="Structure &amp; Cost"/>
+                <field name="merged" invisible="1"/>
+                <field name="toggle_bom_details" invisible="1"/>
+                <button name="action_view_merged_mo" type="object"
+                    class="oe_stat_button" icon="fa-wrench" string="Merged MO"
+                    attrs="{'invisible': [('merged', '=', False)]}">
+                </button>
+            </xpath>
+            <xpath expr="//group[2]/field[7]" position="before">
+                <field name="show_update_pricelist" invisible="1"/>
+                <field name="aggregated" invisible="1"/>
+                <field name="show_source_mo" invisible="1"/>
+                <field name="merged_by" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="pricelist_id" attrs="{'invisible': [('merged_by', '=', -1)]}"/>
+                <button name="update_components_prices" type="object"
+                    string=" Update Prices"
+                    help="Recompute all prices based on this pricelist"
+                    class="btn-link mb-1 px-0" icon="fa-refresh"
+                    confirm="This will update all unit prices based on the currently set pricelist."
+                    attrs="{'invisible': ['|', '|', ('merged_by', '=', -1), ('show_update_pricelist', '=', False), ('state', '!=', 'draft')]}"/>
+            </xpath>
+            <xpath expr="//notebook[1]/page[1]/field[1]" position="after">
+                <group>
+                    <group class="oe_subtotal_footer oe_right" colspan="2">
+                        <field name="total_amount" attrs="{'invisible': [('merged_by', '=', -1)]}"/>
+                    </group>
+                    <div class="oe_clear"/>
+                </group>
+            </xpath>
+            <xpath expr="//tree[1]/button[3]" position="before">
+                <field name="move_price_unit" attrs="{'column_invisible': [('parent.merged_by', '=', -1)]}"/>
+                <field name="price_subtotal" attrs="{'column_invisible': [('parent.merged_by', '=', -1)]}"/>
+            </xpath>
+            <xpath expr="//header[1]/button[4]" position="after">
+                <button name="create_merged_mo" type="object"
+                    class="btn-primary" string="Merge Child MOs"
+                    attrs="{'invisible': ['|', '|', ('merged', '=', True), ('state' ,'!=', 'confirmed'), ('mrp_production_child_count', '&lt;', 1)]}">
+                </button>
+            </xpath>
+            <xpath expr="//button[11]" position="after">
+                <button name="show_components_details" type="object"
+                    class="btn-primary" string="Show BOMs Details"
+                    attrs="{'invisible': ['|', ('merged_by', '!=', -1), ('toggle_bom_details', '=', True)]}">
+                </button>
+                <button name="hide_components_details" type="object"
+                    class="btn-primary" string="Hide BOMs Details"
+                    attrs="{'invisible': ['|', ('merged_by', '!=', -1), ('toggle_bom_details', '=', False)]}">
+                </button>
+            </xpath>
+            <xpath expr="//button[@class='oe_highlight'][5]" position="after">
+                <field name="merged_by" invisible="1"/>
+                <field name="aggregated" invisible="1"/>
+                <field name="show_source_mo" invisible="1"/>
+                <button name="aggregate_components_and_workorders" type="object"
+                    class="btn-primary" string="Aggregate Components"
+                    attrs="{'invisible': ['|', '|', ('merged_by', '=', -1), ('aggregated', '=', True), ('state', '!=', 'draft')]}">
+                </button>
+            </xpath>
+            <xpath expr="//page[1]/field[1]/tree[1]/field[2]" position="after">
+                <field name="source_production" readonly="1" attrs="{'column_invisible': [('parent.show_source_mo', '=', False)]}"/>
+                <field name="sale_order_source" readonly="1" attrs="{'column_invisible': [('parent.show_source_mo', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//group[2]/field[3]" position="after">
+                <field name="color" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('merged_by', '!=', -1)]}"/>
+            </xpath>
+            <xpath expr="//page[1]/field[1]/tree[1]/field[1]" position="after">
+                <field name="product_tmpl_id" invisible="1"/>
+                <field name="can_change_color" invisible="1"/>
+                <field name="color" attrs="{'column_invisible': ['|', ('parent.merged_by', '!=', -1), ('parent.state', '!=', 'draft')], 'readonly': ['|', ('parent.product_id', '=', False), ('can_change_color', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//notebook[1]" position="inside">
+                <page string="Components BOM Structure" name="components_details_ids"
+                      attrs="{'invisible': [('merged_by', '!=', -1)]}">
+                    <field  name="components_details_ids"
+                            widget="section_and_note_one2many"
+                            mode="tree"
+                            attrs="{'invisible': [('merged_by', '!=', -1)]}">
+                        <form>
+                            <field name="display_type" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <label for="name" string="Section Name (eg. Products, Services)" attrs="{'invisible': [('display_type', '!=', 'line_section')]}"/>
+                            <label for="name" string="Note" attrs="{'invisible': [('display_type', '!=', 'line_note')]}"/>
+                            <field name="name" nolabel="1"  attrs="{'invisible': [('display_type', '=', False)]}"/>
+                        </form>
+                        <tree string="Components BOM Structure" editable="bottom">
+                            <control>
+                                <create name="add_product_control" string="Add a product"/>
+                                <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sequence" widget="handle"/>
+                            <field name="name" widget="section_and_note_text" optional="show"/>
+                            <field name="display_type" force_save="1" invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="product_qty"/>
+                            <field name="product_uom"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
