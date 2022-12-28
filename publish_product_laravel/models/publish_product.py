@@ -82,7 +82,7 @@ class PublishProductTemplate(models.Model):
         try:
             payload={'json_product':json.dumps(payload) }
 
-            response = requests.request('POST', url, data=payload, timeout=60)
+            response = requests.request('POST', url, data=payload, headers={"Content-Type": "application/json"}, timeout=60)
             _logger.info("response %s" %response.content.decode("utf-8"))
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
