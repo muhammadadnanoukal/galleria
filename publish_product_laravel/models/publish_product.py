@@ -32,8 +32,8 @@ class PublishProductTemplate(models.Model):
             'taxes_value': self.taxes_id.amount,
             'category': self.categ_id.name,
             'category_id': self.categ_id.id,
-            'variant_id': {val.attribute_id.id: val.id  for val in self.product_template_variant_value_ids},
-            'variant': {val.attribute_id.name: val.name  for val in self.product_template_variant_value_ids},
+            #'variant_id': {val.attribute_id.id: val.id  for val in self.product_template_variant_value_ids},
+            #'variant': {val.attribute_id.name: val.name  for val in self.product_template_variant_value_ids},
         }
 
 
