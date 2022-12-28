@@ -80,14 +80,17 @@ class PublishProductTemplate(models.Model):
         url = self.env['ir.config_parameter'].sudo().get_param('laravel_sync_url')
         payload = self.to_dict()
         try:
-            payload={'json_product':json.dumps(payload) }
+            payload={
+                "id": 0,
+                "jsonrpc": "2.0",
+                "method": "call",
+                "params": {'json_product':payload},
+            }
 
-            response = requests.request('POST', url, data={
-                "params": {
-                    'json_product':json.dumps(payload)
-                }
-            }, headers={"Content-Type": "application/json"}, timeout=60)
-            _logger.info("response %s" %response.content.decode("utf-8"))
+
+            response = requests.request('POST', url, 
+                data=json.dumps(payload).encode(), 
+                headers={"Content-Type": "application/json"}, timeout=60)
             response.raise_for_status()
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
