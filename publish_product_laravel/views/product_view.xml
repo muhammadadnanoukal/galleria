@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- <record id="product_template_async_with_lara_form" model="ir.ui.view">
+        <field name="name">product.template.async.with.lara.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/header/button[last()]" position="after">
+                <field name="is_published_to_lara" invisible="1"/>
+                <button name="publish"
+                   attrs="{'invisible': [('is_published_to_lara', '=', True)]}"
+                   string="Publish To Laravel" type="object" class="oe_highlight"/>
+
+                <button name="to_dict"
+                        disabled="1"
+                   attrs="{'invisible': [('is_published_to_lara', '=', False)]}"
+                   string="Published" type="object" class="bg-danger oe_highlight"/>
+            </xpath>
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name='sync_with_lara'/>
+            </xpath>
+        </field>
+    </record> -->
+
+    <record id="product_sync_with_lara_form" model="ir.ui.view">
+        <field name="name">product.async.with.lara.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name='sync_with_lara'/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

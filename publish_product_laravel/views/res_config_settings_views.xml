@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_view_publisher_settings" model="ir.ui.view">
+        <field name="name">res_config_view_publisher_settings</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='manage_product_packaging']" position="after">
+                <div id="warning_info" >
+                <div class="col-12 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <label for="laravel_sync_url"/>
+                        <div class="text-muted">
+                            Enter Laravel Server API Link, to publish product to
+                        </div>
+                        <div class="content-group">
+                            <div class="mt16">
+                                <field name="laravel_sync_url" class="o_light_label w-100"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

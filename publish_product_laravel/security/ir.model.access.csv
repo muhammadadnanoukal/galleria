@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access.tanmia.assets.custodain,access_tanmia_assets_custodain,altanmia_assets_tracking.model_tanmia_assets_custodain,base.group_user,1,1,1,1
+access.tanmia.assets.assets,access_tanmia_assets_assets,altanmia_assets_tracking.model_tanmia_assets_assets,base.group_user,1,1,1,1
+access.tanmia.assets.assets_tag,access_tanmia_assets_assets_tag,altanmia_assets_tracking.model_tanmia_assets_assets_tag,base.group_user,1,1,1,1
